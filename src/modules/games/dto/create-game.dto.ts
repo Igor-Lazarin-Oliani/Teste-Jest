@@ -1,1 +1,4 @@
-export class CreateGameDto {}
+export class CreateGameDto {
+  title!: string;
+  genre!: string;
+}

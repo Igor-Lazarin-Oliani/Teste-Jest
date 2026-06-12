@@ -1,26 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private users: User[] = [];
+
+  create(createUserDto: CreateUserDto): User {
+    const newUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      ...createUserDto,
+    };
+    this.users.push(newUser);
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  findOne(id: string): User {
+    const user = this.users.find((u) => u.id === id);
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+    return user;
   }
 }
